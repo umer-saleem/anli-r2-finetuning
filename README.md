@@ -41,11 +41,11 @@ All output files are written to:
 
 ## 2. Repository Structure
 
-├── anli_best_results/       # Saved model + metrics + plots (generated after training)
-├── serve/                   # (Optional) deployment or inference scripts
+├── anli_best_results/ # Saved model + metrics + plots
+├── serve/ # Deployment or inference scripts
 ├── Dockerfile
 ├── requirements.txt
-├── ANLI_Finetuning.ipynb    # Main notebook (name varies)
+├── ANLI_Finetuning.ipynb # Main notebook
 └── README.md
 
 
