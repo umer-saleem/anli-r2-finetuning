@@ -41,11 +41,122 @@ All output files are written to:
 
 ## 2. Repository Structure
 
-├── anli_best_results/ # Saved model + metrics + plots
+├── anli_best_results/ # Saved model + metrics + plots.
 ├── serve/ # Deployment or inference scripts
 ├── Dockerfile
 ├── requirements.txt
 ├── ANLI_Finetuning.ipynb # Main notebook
 └── README.md
 
+## 3. Notebook Highlights
 
+The notebook is organized into clear sections that mirror a standard experimental pipeline:
+
+### 0. Configuration
+
+- Choose model name
+- Batch size, gradient accumulation, learning rate, number of epochs
+- GPU/CPU auto-detect
+
+### 1. Reproducibility
+
+All relevant seeds are fixed (numpy, Python, Torch, CUDA).
+
+### 2. Data Loading + EDA
+
+- Loads ANLI from the Hugging Face hub
+- Calculates dataset sizes and label distribution
+- Stores a small EDA summary JSON
+
+### 3. Tokenization + Preprocessing
+Everything is tokenized with ```AutoTokenizer``` and converted into a format ready for PyTorch + Trainer.
+
+### 4. Model Setup
+```AutoModelForSequenceClassification``` with ```num_labels=3```.
+
+### 5. Metrics
+The evaluation uses accuracy, label-specific F1 scores, and macro-F1 (which is the metric used for checkpoint selection).
+
+### 6–8. Training Setup & Execution
+- TrainingArguments tuned for larger models
+- Early stopping
+- Logging every 50 steps
+- Saves best model automatically
+
+### 9–11. Evaluation & Plots
+- Full dev/test evaluation
+- Confusion matrix (PNG + JSON)
+- Classification report
+- Training curves for loss and macro-F1
+
+### 12. Reproducibility Notes
+Saves configuration values and pointers to logs.
+
+## 4. Running Locally (No Docker)
+- Install Python 3.10
+- Install dependencies:
+```
+pip install -r requirements.txt
+```
+- Make sure your environment has a GPU + CUDA (optional but recommended).
+- Open the notebook:
+```
+jupyter notebook
+```
+- Run all cells.
+Artifacts appear automatically under ```anli_best_results/```.
+
+## 5. Using the Docker Image
+A simple Dockerfile is included. It installs dependencies, copies the saved model artifacts, and launches a notebook server inside the container.
+
+**Build the image**
+```
+docker build -t anli-finetune .
+```
+**Run the container**
+```
+docker run -it -p 8080:8080 anli-finetune
+```
+Jupyter Notebook will be available at:
+```
+http://localhost:8080
+```
+This setup is useful if you want a clean environment for experiments or if you want to share the notebook + results with someone without requiring them to install the dependencies manually.
+
+**Note**
+The Dockerfile uses the lightweight python:3.10-slim base and installs only minimal OS-level packages needed for building Python dependencies. GPU support inside Docker would require building an image on top of an NVIDIA CUDA base image, which is optional depending on your deployment plan.
+
+## 6. Training Tips
+Because ANLI is fairly large and RoBERTa-large is memory-hungry, a few hyperparameters tend to matter:
+- **BATCH_SIZE:**
+If you run out of GPU memory, reduce BATCH_SIZE and increase GRAD_ACC.
+- **MAX_LENGTH:**
+ANLI examples can be long. 256 works well as a balance between speed and coverage.
+- **USE_ALL_ROUNDS:**
+Training on all rounds significantly increases training time. If you're prototyping, use only R2.
+- **Warmup + Weight Decay:**
+Both help stabilize training for large models, especially on adversarial datasets.
+
+## 7. Example Results (Typical Trends)
+Depending on the GPU and hyperparameters, you should expect:
+- Training F1 improving gradually due to adversarial difficulty
+- Macro-F1 ~ mid 40s to mid 50s for RoBERTa-large (across all rounds)
+- Confusion matrix showing imbalance in contradiction vs neutral
+
+Actual values will be stored in:
+```
+anli_best_results/metrics.json
+```
+
+## 8. Reproducibility
+To reproduce a run:
+- Set the same seed
+- Use identical hyperparameters
+- Keep the same training/evaluation order
+- Use the same HF model version
+
+All of this is automatically stored in:
+```
+anli_best_results/reproducibility.json
+```
+This file captures the critical configuration fields from the training session.
