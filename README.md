@@ -11,3 +11,7 @@ The project started as an attempt to build a repeatable finetuning setup that in
 
 The overall workflow follows the typical structure of a research-oriented experiment, with an emphasis on reproducibility and keeping track of artifacts.
 
+## 1. Project Overview
+ANLI is a challenging adversarial NLI benchmark composed of three rounds (R1, R2, R3).
+By default, the notebook trains on **all rounds**, but this can be changed to **only Round 2 (R2)** if you want a faster experiment:
+
