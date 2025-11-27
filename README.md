@@ -15,3 +15,7 @@ The overall workflow follows the typical structure of a research-oriented experi
 ANLI is a challenging adversarial NLI benchmark composed of three rounds (R1, R2, R3).
 By default, the notebook trains on **all rounds**, but this can be changed to **only Round 2 (R2)** if you want a faster experiment:
 
+```
+USE_ALL_ROUNDS = True   # set to False to use only R2
+```
+
