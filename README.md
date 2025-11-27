@@ -18,4 +18,20 @@ By default, the notebook trains on **all rounds**, but this can be changed to **
 ```
 USE_ALL_ROUNDS = True   # set to False to use only R2
 ```
+The training pipeline uses:
+- **RoBERTa-large**
+- **FP16 mixed precision** (if GPU available)
+- **Gradient accumulation** to fit the large model on smaller GPUs
+- **Early stopping**
+- **Macro-F1** as the main model selection metric
+- Fully reproducible random seeds
+
+After training, the script exports:
+- ```metrics.json``` (dev + test)
+- trainer_history.json
+- classification_report.json
+- confusion_matrix.png and JSON
+- Loss and F1 curves
+- The final model + tokenizer under anli_best_results/model/
+- All output files are written to:
 
