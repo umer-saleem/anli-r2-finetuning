@@ -39,15 +39,7 @@ All output files are written to:
 ./anli_best_results/
 ```
 
-## 2. Repository Structure
-├── anli_best_results/ # Saved model + metrics + plots.
-├── serve/ # Deployment or inference scripts
-├── Dockerfile
-├── requirements.txt
-├── ANLI_Finetuning.ipynb # Main notebook
-└── README.md
-
-## 3. Notebook Highlights
+## 2. Notebook Highlights
 
 The notebook is organized into clear sections that mirror a standard experimental pipeline:
 
@@ -91,7 +83,7 @@ The evaluation uses accuracy, label-specific F1 scores, and macro-F1 (which is t
 ### 12. Reproducibility Notes
 Saves configuration values and pointers to logs.
 
-## 4. Running Locally (No Docker)
+## 3. Running Locally (No Docker)
 - Install Python 3.10
 - Install dependencies:
 ```
@@ -105,7 +97,7 @@ jupyter notebook
 - Run all cells.
 Artifacts appear automatically under ```anli_best_results/```.
 
-## 5. Using the Docker Image
+## 4. Using the Docker Image
 A simple Dockerfile is included. It installs dependencies, copies the saved model artifacts, and launches a notebook server inside the container.
 
 **Build the image**
@@ -125,7 +117,7 @@ This setup is useful if you want a clean environment for experiments or if you w
 **Note**
 The Dockerfile uses the lightweight python:3.10-slim base and installs only minimal OS-level packages needed for building Python dependencies. GPU support inside Docker would require building an image on top of an NVIDIA CUDA base image, which is optional depending on your deployment plan.
 
-## 6. Training Tips
+## 5. Training Tips
 Because ANLI is fairly large and RoBERTa-large is memory-hungry, a few hyperparameters tend to matter:
 - **BATCH_SIZE:**
 If you run out of GPU memory, reduce BATCH_SIZE and increase GRAD_ACC.
@@ -136,7 +128,7 @@ Training on all rounds significantly increases training time. If you're prototyp
 - **Warmup + Weight Decay:**
 Both help stabilize training for large models, especially on adversarial datasets.
 
-## 7. Example Results (Typical Trends)
+## 6. Example Results (Typical Trends)
 Depending on the GPU and hyperparameters, you should expect:
 - Training F1 improving gradually due to adversarial difficulty
 - Macro-F1 ~ mid 40s to mid 50s for RoBERTa-large (across all rounds)
@@ -147,7 +139,7 @@ Actual values will be stored in:
 anli_best_results/metrics.json
 ```
 
-## 8. Reproducibility
+## 7. Reproducibility
 To reproduce a run:
 - Set the same seed
 - Use identical hyperparameters
