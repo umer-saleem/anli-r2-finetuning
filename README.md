@@ -1,4 +1,4 @@
-# High-Performance ANLI Finetuning
+# Multi-Class Classification Using ANLI R2 Dataset
 
 This repository contains an end-to-end pipeline for finetuning **RoBERTa-large** on the **ANLI (Adversarial NLI)** dataset using Hugging Face Transformers.
 The project started as an attempt to build a repeatable finetuning setup that includes:
